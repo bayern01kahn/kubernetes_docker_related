@@ -1,0 +1,27 @@
+FROM gradle:6.4-jdk11 AS builder
+ARG NEXUS_URL
+ARG NEXUS_USERNAME
+ARG NEXUS_PASSWORD
+ENV NEXUS_USERNAME=$NEXUS_USERNAME \
+    NEXUS_PASSWORD=$NEXUS_PASSWORD \
+    NEXUS_URL=$NEXUS_URL
+
+WORKDIR /code
+COPY . /code
+
+RUN ./gradlew assemble
+
+FROM openjdk:11-jre
+
+LABEL vendor="XXX" \
+      maintainer="justin.luo@XXXX.com"
+
+RUN mkdir -p /app \
+    && useradd -U app
+
+WORKDIR /app
+USER root:root
+COPY --from=builder /code/build/libs/XXX-*.jar app.jar
+
+EXPOSE 8089
+CMD ["java", "-jar","app.jar","--spring.profiles.active=env"]

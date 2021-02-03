@@ -1,0 +1,66 @@
+version: '3'
+services:
+  zoo1:
+    image: zookeeper:latest
+    # image: zookeeper:3.6
+    restart: always
+    hostname: zoo1
+    ports:
+      - "2181:2181"
+    container_name: zookeeper
+  
+  kafka1:
+    image: wurstmeister/kafka:latest
+    # image: wurstmeister/kafka:2.12-2.5.0
+    ports:
+      - "9092:9092"
+    environment:
+      # KAFKA_ADVERTISED_HOST_NAME: localhost
+      # KAFKA_ZOOKEEPER_CONNECT: zoo1:2181
+      # KAFKA_ADVERTISED_PORT: 9092
+      # KAFKA_BROKER_ID: 1
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      # KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
+      KAFKA_BROKER_ID: 0   #broker的全局唯一编号，不能重复
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zoo1
+    container_name: kafka1
+
+  kafka2:
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9093:9093"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
+      KAFKA_BROKER_ID: 1  
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093
+      # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zoo1
+    container_name: kafka2
+
+  kafka-manager:
+    image: kafkamanager/kafka-manager:latest
+    ports:
+      - "9000:9000"
+    restart: unless-stopped
+    environment:
+        ZK_HOSTS: localhost
+        # APPLICATION_SECRET: "random-secret"
+        # KAFKA_MANAGER_AUTH_ENABLED: "true"
+        # KAFKA_MANAGER_USERNAME: "root"
+        # KAFKA_MANAGER_PASSWORD: "testpass"
+    
+    # depends_on:
+    #   - zoo1
+    # container_name: kafka-manager  
+    # command: -Dpidfile.path=/dev/null                                

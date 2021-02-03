@@ -1,0 +1,58 @@
+
+version: '3'
+services:
+
+
+#  需要先将 docker advaned setting 改为 至少 4cpus  memory 4g  swap 1g
+
+###############################
+   cassandra0_172:
+    image: cassandra
+    container_name: cassandra0_172
+    # environment:
+        # CASSANDRA_LISTEN_ADDRESS: 172.18.0.1
+        # CASSANDRA_LISTEN_ADDRESS: 127.0.0.1
+    # 	CASSANDRA_BROADCAST_ADDRESS: 172.18.0.2
+    ports:
+     - 9042:9042
+     - 7199:7199
+
+###############################
+   cassandra1_172:
+    image: cassandra
+    container_name: cassandra1_172
+    # environment:
+        # CASSANDRA_LISTEN_ADDRESS: 127.0.0.1
+        # CASSANDRA_LISTEN_ADDRESS: 172.18.0.2
+    ports:
+     - 9142:9042
+    links:
+     - cassandra0_172:seed
+    environment:
+     - CASSANDRA_SEEDS=seed
+
+###############################
+   cassandra2_172:
+    image: cassandra
+    container_name: cassandra2_172
+    environment:
+        CASSANDRA_LISTEN_ADDRESS: 172.18.0.2
+    ports:
+     - 9242:9142
+    links:
+     - cassandra0_172:seed
+    environment:
+     - CASSANDRA_SEEDS=seed
+
+###############################
+   cassandra3_172:
+    image: cassandra
+    container_name: cassandra3_172
+    environment:
+        CASSANDRA_LISTEN_ADDRESS: 172.18.0.4
+    ports:
+     - 9342:9242
+    links:
+     - cassandra0_172:seed
+    environment:
+     - CASSANDRA_SEEDS=seed     

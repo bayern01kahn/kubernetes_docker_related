@@ -1,14 +1,14 @@
-# dockerRelated
+# Kubernetes docker Related project
+Collect k8s and docker related demo's
 
-kfk-singlebroker-mng.yml: 
-   zookeeper+ 1 kafka broker+ kafkamanager => docker-compose file
-   
+| Name | Content |
+| --- | --- |
+| kafka | docker |
+| kafka | docker-compose |
+| kafka-eagle | k8s |
+| redis-single | based on kustomize |
+| cassandra-3 | docker-compose |
 
-## kafka
-
-## redis
-
-## cassandra
 
 ## github-api
 

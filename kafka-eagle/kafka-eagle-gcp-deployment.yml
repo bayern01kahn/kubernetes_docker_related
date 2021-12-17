@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-kafka-eagle
+  labels:
+    app: kafka-eagle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-eagle
+  template: 
+    metadata:
+      labels:
+        app: kafka-eagle
+    spec:
+      containers:
+      - name: kafka-eagle
+        image: gcr.io/sap-sportsone/kafka-eagle:1.0-gcp
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8048
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          procMount: Default
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+#        stdin: true
+#        tty: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 2Gi
+          limits:
+            cpu: 500m
+            memory: 3Gi
+#        volumeMounts:
+#          - name: kafka-eagle-data-persistent-storage
+#            mountPath: /mnt
+#      volumes:
+#        - name: kafka-eagle-data-persistent-storage
+#          persistentVolumeClaim:
+#            claimName: kafka-eagle-data-pv-claim
+

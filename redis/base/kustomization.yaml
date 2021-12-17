@@ -1,0 +1,6 @@
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - pvc.yaml
+  - svc.yaml
+  - statefulset.yaml

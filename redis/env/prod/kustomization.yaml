@@ -1,0 +1,17 @@
+bases:
+  - ../../base
+patches:
+#  - replica_count.yaml
+  - resource_limits.yaml
+patchesStrategicMerge:
+  - env.yaml
+images:
+  - name: redis
+    newTag: 5.0.9
+configMapGenerator:
+  - name: redis.conf
+    namespace: redis
+#    behavior: merge
+    behavior: replace
+    files:
+      - configs/redis.conf
